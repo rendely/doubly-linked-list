@@ -46,7 +46,11 @@ class DoublyLinkedList {
   // add the node to the start of the list, no nodes should be removed
   addFirst(node) {
     node.next = this.head;
+    if (this.head){
+      this.head.prev = node;
+    }
     this.head = node;
+    node.prev = null;
   }
 
   // add node to end of list, no nodes should be removed
@@ -60,6 +64,7 @@ class DoublyLinkedList {
     this.iterate(currNode => {
       if (currNode.next === null) {
         currNode.next = node;
+        node.prev = currNode;
         return true;
       }
     });
@@ -72,6 +77,7 @@ class DoublyLinkedList {
 
     if (this.head !== null) {
       this.head = this.head.next;
+      this.head.prev = null;
     }
 
     return oldHead;
@@ -109,6 +115,11 @@ class DoublyLinkedList {
       if (count === idx - 1) {
         node.next = currNode.next.next;
         currNode.next = node;
+        node.prev = currNode;
+
+        if (node.next){
+          currNode.next.next.prev = node;
+        }
 
         return true;
       }
@@ -130,6 +141,11 @@ class DoublyLinkedList {
         const oldNext = currNode.next;
         currNode.next = node;
         node.next = oldNext;
+        node.prev = currNode;
+
+        if (currNode.next.next){
+          currNode.next.next.prev = node;
+        }
 
         return true;
       }
@@ -148,6 +164,9 @@ class DoublyLinkedList {
       if (count === idx - 1) {
         oldNode = node.next;
         node.next = node.next.next;
+        if (node.next){
+          node.next.prev = node;
+        }
 
         return true;
       }
@@ -162,9 +181,10 @@ class DoublyLinkedList {
 }
 
 class Node {
-  constructor(value = null, next = null) {
+  constructor(value = null, next = null, prev = null ) {
     this.value = value;
     this.next = next;
+    this.prev = null;
   }
 }
 
